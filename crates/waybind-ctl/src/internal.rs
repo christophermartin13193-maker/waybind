@@ -4,7 +4,7 @@ mod life;
 mod logic;
 
 // Internal API
-use argument::{Args, Verbosity};
+use argument::{Args, Verbosity, Command};
 use death::*;
 use life::Step;
 use logic::*;
