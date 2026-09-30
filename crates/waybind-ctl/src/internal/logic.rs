@@ -2,4 +2,4 @@
 pub mod init;
 
 // Internal API
-use super::{Args, Step, WaybindError, Command};
+use super::{Args, Command, Step, WaybindError};

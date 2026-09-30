@@ -14,6 +14,8 @@ toml="1.1.6"
 dirs="7.0.0"
 zbus="5.19.0"
 xkbcommon-rs="0.1.2"
+# i don't want to keep tokio
+tokio = { version="1.53.1", features=["full"]}
 
 [profile.release]
 opt-level=3
