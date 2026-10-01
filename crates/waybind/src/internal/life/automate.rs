@@ -13,8 +13,8 @@ impl Automate {
         let current = std::mem::replace(&mut self.step, Step::Exit);
         self.step = match current {
             Step::GetConfig => get_config::step()?,
-            Step::GetKeyMap() => get_keymap::step()?,
-            Step::Connection() => connection::step()?,
+            Step::GetKeyMap(config) => get_keymap::step(config)?,
+            Step::Connection(config) => connection::step(config)?,
             Step::Exit => return Ok(Output::Exit)
         };
 

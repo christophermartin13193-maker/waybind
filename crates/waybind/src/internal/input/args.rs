@@ -11,7 +11,7 @@ pub struct Args {
     pub notify: bool,
 
     #[arg(short, long)]
-    pub config: PathBuf,
+    pub config: Option<PathBuf>,
 
     #[arg(short, long, requires="config")]
     pub backup: bool,

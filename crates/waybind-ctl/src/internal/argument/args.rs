@@ -32,23 +32,31 @@ pub enum Command {
     Monitor,
 
     // Mutation de binding en mémoire
-    #[command(group=ArgGroup::new("target_type").required(true).args(["pw", "cmd"]))]
+    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "pushed"]))]
     Add {
         #[arg(long)]
         bind: String,
         #[arg(long)]
-        pw: Option<String>,
+        pressed: bool,
         #[arg(long)]
-        cmd: Option<String>,
+        released: Option<u64>,
+        #[arg(long)]
+        hold: Option<u64>,
+        #[arg(long)]
+        exec: String,
     },
-    #[command(group=ArgGroup::new("target_type").required(true).args(["pw", "cmd"]))]
+    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "pushed"]))]
     Mod {
         #[arg(long)]
         bind: String,
         #[arg(long)]
-        pw: Option<String>,
+        pressed: bool,
         #[arg(long)]
-        cmd: Option<String>,
+        released: Option<u64>,
+        #[arg(long)]
+        hold: Option<u64>,
+        #[arg(long)]
+        exec: String,
     },
     Del {
         #[arg(long)]

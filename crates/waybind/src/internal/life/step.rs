@@ -1,6 +1,8 @@
+use common::Config;
+
 pub enum Step {
     GetConfig,
-    GetKeyMap(),
-    Connection(),
+    GetKeyMap(Config),
+    Connection(Config),
     Exit,
 }

@@ -4,4 +4,4 @@ pub mod get_keymap;
 pub mod connection;
 
 // Internal API
-use super::{Step, WaybindError, Args};
+use super::{Step, WaybindError, Args, Health, Bind};

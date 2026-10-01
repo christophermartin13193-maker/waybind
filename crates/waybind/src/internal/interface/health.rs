@@ -1,12 +1,12 @@
-use super::Interface;
 use zbus::interface;
 
 use std::collections::HashMap;
+use super::Health;
 
 #[interface(name = "org.waybind.Health")]
-impl Interface {
+impl Health {
     async fn status(&self) -> String {
-        String::from("You asked for a status")
+        format!("Context placeholder is equal to {}", self.context.placeholder)
     }
 
     async fn list(&self) -> String {

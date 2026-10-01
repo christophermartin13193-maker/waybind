@@ -1,5 +1,5 @@
 mod health;
-mod structure;
+mod bind;
 
-// Both API
-pub use structure::Interface;
+// Internal API
+use super::{Bind, Health};

@@ -1,7 +1,8 @@
 use super::{Step, WaybindError};
+use common::Config;
 
-pub fn step() -> Result<Step, WaybindError> {
-    println!("Step : GetKeyMap");
+pub fn step(config: Config) -> Result<Step, WaybindError> {
+    dbg!(&config);
 
-    Ok(Step::Connection())
+    Ok(Step::Connection(config))
 }
