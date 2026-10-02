@@ -1,5 +1,5 @@
-use super::{SharedContext};
+use super::SharedMutContext;
 
 pub struct Health {
-    pub context: SharedContext,
+    pub context: SharedMutContext,
 }

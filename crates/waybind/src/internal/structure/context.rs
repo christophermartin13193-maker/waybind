@@ -5,5 +5,4 @@ pub struct Context {
     pub placeholder: u64,
 }
 
-pub type SharedContext = Arc<Context>;
 pub type SharedMutContext = Arc<Mutex<Context>>;

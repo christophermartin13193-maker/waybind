@@ -38,28 +38,43 @@
 //
 //    Ok(())
 //}
+//
+//use zbus::proxy;
+//
+//#[proxy(
+//    interface = "org.waybind.Health",
+//    default_service = "org.waybind.Daemon",
+//    default_path = "/org/waybind/Daemon"
+//)]
+//trait HealthInterface {
+//    async fn status(&self) -> zbus::Result<String>;
+//    async fn list(&self) -> zbus::Result<String>;
+//    async fn get(&self, bind: &str) -> zbus::Result<String>;
+//}
+//
+//#[tokio::main]
+//async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//    let connection = zbus::Connection::session().await?;
+//    let proxy = HealthInterfaceProxy::new(&connection).await?;
+//
+//    println!("status result : {}", proxy.status().await?);
+//    println!("list result : {}", proxy.list().await?);
+//    println!("get result : {}", proxy.get("Ctrl+C").await?);
+//
+//    Ok(())
+//}
 
-use zbus::proxy;
-
-#[proxy(
-    interface = "org.waybind.Health",
-    default_service = "org.waybind.Daemon",
-    default_path = "/org/waybind/Daemon"
-)]
-trait HealthInterface {
-    async fn status(&self) -> zbus::Result<String>;
-    async fn list(&self) -> zbus::Result<String>;
-    async fn get(&self, bind: &str) -> zbus::Result<String>;
-}
+use waybind_ctl::{Automate, STANDARD, Output};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let connection = zbus::Connection::session().await?;
-    let proxy = HealthInterfaceProxy::new(&connection).await?;
+async fn main() {
+    let mut automate = Automate::default();
+    loop {
+        match automate.run().await {
+            Ok(Output::Continue) => continue,
+            Ok(Output::Exit) => std::process::exit(STANDARD),
 
-    println!("status result : {}", proxy.status().await?);
-    println!("list result : {}", proxy.list().await?);
-    println!("get result : {}", proxy.get("Ctrl+C").await?);
-
-    Ok(())
+            Err(error) => std::process::exit(automate.handle_error(error))
+        }
+    }
 }

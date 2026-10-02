@@ -9,12 +9,12 @@ impl Automate {
         Self { step: Step::GetConfig }
     }
 
-    pub fn run(&mut self) -> Result<Output, WaybindError> {
+    pub async fn run(&mut self) -> Result<Output, WaybindError> {
         let current = std::mem::replace(&mut self.step, Step::Exit);
         self.step = match current {
             Step::GetConfig => get_config::step()?,
             Step::GetKeyMap(config) => get_keymap::step(config)?,
-            Step::Connection(config) => connection::step(config)?,
+            Step::Connection(config) => connection::step(config).await?,
             Step::Exit => return Ok(Output::Exit)
         };
 

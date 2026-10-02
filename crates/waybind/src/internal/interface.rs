@@ -2,4 +2,4 @@ mod health;
 mod bind;
 
 // Internal API
-use super::{Bind, Health};
+use super::{Bind, Health, STANDARD};

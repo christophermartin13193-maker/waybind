@@ -17,10 +17,11 @@
 
 use waybind::{Automate, Output, STANDARD};
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let mut automate = Automate::default();
     loop {
-        match automate.run() {
+        match automate.run().await {
             Ok(Output::Continue) => continue,
             Ok(Output::Exit) => std::process::exit(STANDARD),
 
