@@ -1,12 +1,17 @@
 // Project API
-pub mod init;
-pub mod status;
-pub mod reload;
-pub mod list;
-pub mod get;
 pub mod add;
-pub mod modify;
+pub mod check;
 pub mod del;
+pub mod get;
+pub mod init;
+pub mod list;
+pub mod modify;
+pub mod reload;
+pub mod status;
+pub mod trigger;
 
 // Internal API
-use super::{Args, Command, Step, WaybindError, Verbosity, HealthInterfaceProxy, BindInterfaceProxy};
+use super::{
+    Args, BindAction, BindInterfaceProxy, Command, HealthInterfaceProxy, Step, Verbosity,
+    WaybindError,
+};

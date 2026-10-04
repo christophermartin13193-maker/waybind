@@ -1,5 +1,5 @@
+use serde::{Deserialize, Serialize};
 use zbus::zvariant::Type;
-use serde::{Serialize, Deserialize};
 
 #[derive(Type, Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum ActionType {

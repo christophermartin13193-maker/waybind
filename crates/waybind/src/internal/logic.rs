@@ -1,7 +1,7 @@
 // Program API
+pub mod connection;
 pub mod get_config;
 pub mod get_keymap;
-pub mod connection;
 
 // Internal API
-use super::{Step, WaybindError, Args, Health, Bind, Context};
+use super::{Args, Bind, Context, Health, Step, WaybindError};

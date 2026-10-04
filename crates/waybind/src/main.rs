@@ -25,7 +25,7 @@ async fn main() {
             Ok(Output::Continue) => continue,
             Ok(Output::Exit) => std::process::exit(STANDARD),
 
-            Err(error) => std::process::exit(Automate::handle_error(error))
+            Err(error) => std::process::exit(Automate::handle_error(error)),
         }
     }
 }

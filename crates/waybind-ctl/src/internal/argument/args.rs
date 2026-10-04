@@ -17,7 +17,7 @@ pub struct Args {
     pub command: Command,
 }
 
-#[derive(Subcommand, Debug)]
+#[derive(Subcommand, Debug, PartialEq, Eq)]
 pub enum Command {
     // Gestion du daemon/configuration
     Reload {

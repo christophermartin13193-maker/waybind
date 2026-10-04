@@ -13,6 +13,6 @@ pub struct Args {
     #[arg(short, long)]
     pub config: Option<PathBuf>,
 
-    #[arg(short, long, requires="config")]
+    #[arg(short, long, requires = "config")]
     pub backup: bool,
 }

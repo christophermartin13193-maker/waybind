@@ -1,15 +1,14 @@
 mod argument;
+mod client;
 mod death;
 mod life;
 mod logic;
-mod client;
 
 // Internal API
-use argument::{Args, Command, Verbosity};
+use argument::{Args, BindAction, Command, Verbosity};
+use client::{BindInterfaceProxy, HealthInterfaceProxy};
 use death::*;
 use life::Step;
-use logic::*;
-use client::{BindInterfaceProxy, HealthInterfaceProxy};
 
 // Both API
 pub use death::Output;

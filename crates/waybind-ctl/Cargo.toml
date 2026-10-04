@@ -8,3 +8,4 @@ clap.workspace=true
 xkbcommon-rs.workspace=true
 zbus.workspace=true
 tokio.workspace=true
+common.workspace=true

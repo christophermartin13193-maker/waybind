@@ -1,8 +1,8 @@
-mod internal;
+mod core;
 
 // API
-pub use internal::Config;
-pub use internal::ConfigError;
-pub use internal::ActionType;
-pub use internal::get;
-pub use internal::get_default;
+pub use core::Config;
+pub use core::Notifier;
+pub use core::{ERROR_ARG, ERROR_CONFIG, ERROR_IO, STANDARD};
+pub use core::{Outcome, WaybindError};
+pub use core::{first_path, get, get_default, second_path};

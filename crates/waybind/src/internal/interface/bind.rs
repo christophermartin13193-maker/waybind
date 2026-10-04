@@ -1,6 +1,6 @@
-use zbus::interface;
-use common::ActionType;
 use super::Bind;
+use common::ActionType;
+use zbus::interface;
 
 #[interface(name = "org.waybind.Bind")]
 impl Bind {

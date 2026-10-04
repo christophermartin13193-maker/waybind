@@ -1,19 +1,55 @@
 #![allow(unused)]
-use super::{Args, Command, Step, WaybindError, Verbosity};
+use super::{Args, BindAction, Command, Step, Verbosity, WaybindError};
 
-pub fn step(args: Args) -> Result<Step, WaybindError> {
-    let v = match (args.quiet, args.debug) {
-        (true, _) => Verbosity::Quiet,
-        (_, true) => Verbosity::Debug,
-        _ => Verbosity::Normal
-    };
-
-    if v == Verbosity::Debug { println!("Debug mode activated") }
-    if v == Verbosity::Debug { println!("Parsing arguments") }
+pub fn step(v: Verbosity, args: Args) -> Result<Step, WaybindError> {
+    if v == Verbosity::Debug {
+        println!("Debug mode activated");
+        println!("Parsing arguments")
+    }
 
     match args.command {
-        Command::Status => Ok(Step::Status),
-        Command::Del { bind } => Ok(Step::Del(bind)),
-        _ => Ok(Step::Exit)
+        // No client needed
+        Command::Check { config } => Ok(Step::Check { v, path: config }),
+        // Health
+        Command::Status => Ok(Step::Status { v }),
+        Command::List => Ok(Step::List { v }),
+        Command::Get { bind } => Ok(Step::Get { v, bind }),
+        Command::Reload { config } => Ok(Step::Reload { v, path: config }),
+        Command::Monitor => Ok(Step::Monitor { v }),
+        // Bind
+        Command::Add {
+            bind,
+            pressed,
+            released,
+            hold,
+            exec,
+        } => Ok(Step::Add {
+            v,
+            action: BindAction {
+                bind,
+                exec,
+                pressed,
+                released,
+                hold,
+            },
+        }),
+        Command::Mod {
+            bind,
+            pressed,
+            released,
+            hold,
+            exec,
+        } => Ok(Step::Add {
+            v,
+            action: BindAction {
+                bind,
+                exec,
+                pressed,
+                released,
+                hold,
+            },
+        }),
+        Command::Del { bind } => Ok(Step::Del { v, bind }),
+        Command::Trigger { bind } => Ok(Step::Trigger { v, bind }),
     }
 }

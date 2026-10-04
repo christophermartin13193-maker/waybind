@@ -1,10 +1,17 @@
-use super::{WaybindError, Step, BindInterfaceProxy};
+use super::{BindInterfaceProxy, Step, Verbosity, WaybindError};
 
-pub async fn step(bind: String) -> Result<Step, WaybindError> {
+pub async fn step(v: Verbosity, bind: String) -> Result<Step, WaybindError> {
     let connection = zbus::Connection::session().await?;
-    let proxy = BindInterfaceProxy::new(&connection).await?;
+    let proxy =
+        BindInterfaceProxy::new(&connection, "org.waybind.Bind", "org/waybind/Daemon/Bind").await?;
 
-    println!("{}", proxy.del(bind).await?);
-
-    Ok(Step::Exit)
+    match proxy.del(bind).await {
+        Err(err) => Err(WaybindError::ZBusError(err)),
+        Ok(answer) => {
+            if v != Verbosity::Quiet {
+                println!("{answer}")
+            }
+            Ok(Step::Exit)
+        }
+    }
 }

@@ -1,6 +1,6 @@
-mod health;
 mod bind;
+mod health;
 
 // Program API
-pub use health::HealthInterfaceProxy;
 pub use bind::BindInterfaceProxy;
+pub use health::HealthInterfaceProxy;

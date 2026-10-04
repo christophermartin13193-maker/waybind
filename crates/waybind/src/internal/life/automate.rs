@@ -1,4 +1,4 @@
-use super::{Step, Output, WaybindError, code::{*}, logic::{*}};
+use super::{Output, Step, WaybindError, code::*, logic::*};
 
 pub struct Automate {
     step: Step,
@@ -6,7 +6,9 @@ pub struct Automate {
 
 impl Automate {
     pub fn new() -> Self {
-        Self { step: Step::GetConfig }
+        Self {
+            step: Step::GetConfig,
+        }
     }
 
     pub async fn run(&mut self) -> Result<Output, WaybindError> {
@@ -15,7 +17,7 @@ impl Automate {
             Step::GetConfig => get_config::step()?,
             Step::GetKeyMap(config) => get_keymap::step(config)?,
             Step::Connection(config) => connection::step(config).await?,
-            Step::Exit => return Ok(Output::Exit)
+            Step::Exit => return Ok(Output::Exit),
         };
 
         Ok(Output::Continue)

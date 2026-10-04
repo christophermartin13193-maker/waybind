@@ -64,7 +64,7 @@
 //    Ok(())
 //}
 
-use waybind_ctl::{Automate, STANDARD, Output};
+use waybind_ctl::{Automate, Output, STANDARD};
 
 #[tokio::main]
 async fn main() {
@@ -74,7 +74,7 @@ async fn main() {
             Ok(Output::Continue) => continue,
             Ok(Output::Exit) => std::process::exit(STANDARD),
 
-            Err(error) => std::process::exit(automate.handle_error(error))
+            Err(error) => std::process::exit(automate.handle_error(error)),
         }
     }
 }

@@ -1,10 +1,10 @@
+mod bind;
 mod context;
 mod health;
-mod bind;
 
 // Both API
-pub use context::{*};
+pub use context::*;
 
 // Program API
-pub use health::Health;
 pub use bind::Bind;
+pub use health::Health;
