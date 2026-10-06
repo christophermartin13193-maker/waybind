@@ -1,4 +1,4 @@
-mod internal;
+mod core;
 
 // API
-pub use internal::{Automate, Output, STANDARD};
+pub use core::Automaton;

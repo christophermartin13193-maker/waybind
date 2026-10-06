@@ -5,5 +5,5 @@ mod getter;
 use super::control::WaybindError;
 
 // External API
-pub use cfg::Config;
+pub use cfg::{Action, Config};
 pub use getter::*;

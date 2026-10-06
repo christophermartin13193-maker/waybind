@@ -1,4 +1,4 @@
-use super::{entity::HealthServer, WaybindError, STANDARD};
+use super::{STANDARD, WaybindError, entity::HealthServer};
 use zbus::{interface, proxy};
 
 #[proxy(interface = "org.waybind.Health")]
@@ -20,12 +20,18 @@ impl HealthServer {
     }
 
     async fn list(&self) -> Result<String, zbus::fdo::Error> {
-        let context = self.context.lock().map_err(|e| WaybindError::LockPoisoned(e.to_string()))?;
+        let context = self
+            .context
+            .lock()
+            .map_err(|e| WaybindError::LockPoisoned(e.to_string()))?;
         Ok(format!("list : {}", context.placeholder))
     }
 
     async fn get(&self, bind: String) -> Result<String, zbus::fdo::Error> {
-        let context = self.context.lock().map_err(|e| WaybindError::LockPoisoned(e.to_string()))?;
+        let context = self
+            .context
+            .lock()
+            .map_err(|e| WaybindError::LockPoisoned(e.to_string()))?;
         Ok(format!("get {} : {}", bind, context.placeholder))
     }
 
