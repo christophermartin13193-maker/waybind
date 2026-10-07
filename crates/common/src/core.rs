@@ -1,7 +1,7 @@
 mod bridge;
 mod config;
 mod control;
-mod notifier;
+mod feedback;
 
 // External API
 pub use bridge::{
@@ -9,4 +9,8 @@ pub use bridge::{
 };
 pub use config::*;
 pub use control::*;
-pub use notifier::Notifier;
+//pub use notifier::Notifier;
+pub use feedback::{
+    Feedback, Messenger, MessengerLevel, Notifier, NotifierError, NotifierLevel, SendMessage,
+    SendNotification,
+};

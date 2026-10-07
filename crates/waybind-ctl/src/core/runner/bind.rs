@@ -1,5 +1,5 @@
 use super::{MinimizedArg, Step};
-use common::{BindClientProxy, Notifier, SharedAction, WaybindError};
+use common::{BindClientProxy, SendMessage, WaybindError};
 
 async fn proxy() -> Result<(zbus::Connection, BindClientProxy<'static>), WaybindError> {
     let c = zbus::Connection::session().await?;
@@ -7,36 +7,48 @@ async fn proxy() -> Result<(zbus::Connection, BindClientProxy<'static>), Waybind
     Ok((c, proxy))
 }
 
-pub async fn add(n: Notifier, args: MinimizedArg) -> Result<Step, WaybindError> {
-    n.dbg("STEP : ADD");
+pub async fn add<M: SendMessage + Clone + Copy>(
+    m: M,
+    args: MinimizedArg,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : ADD");
     let (_c, p) = proxy().await?;
-    n.msg(&format!(
+    m.msg(&format!(
         "{}",
         p.add(args.bind, args.exec, args.action).await?
     ));
     Ok(Step::Exit)
 }
 
-pub async fn modify(n: Notifier, args: MinimizedArg) -> Result<Step, WaybindError> {
-    n.dbg("STEP : MOD");
+pub async fn modify<M: SendMessage + Clone + Copy>(
+    m: M,
+    args: MinimizedArg,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : MOD");
     let (_c, p) = proxy().await?;
-    n.msg(&format!(
+    m.msg(&format!(
         "{}",
         p.modify(args.bind, args.exec, args.action).await?
     ));
     Ok(Step::Exit)
 }
 
-pub async fn del(n: Notifier, bind: String) -> Result<Step, WaybindError> {
-    n.dbg("STEP : DEL");
+pub async fn del<M: SendMessage + Clone + Copy>(
+    m: M,
+    bind: String,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : DEL");
     let (_c, p) = proxy().await?;
-    n.msg(&format!("{}", p.del(bind).await?));
+    m.msg(&format!("{}", p.del(bind).await?));
     Ok(Step::Exit)
 }
 
-pub async fn trigger(n: Notifier, bind: String) -> Result<Step, WaybindError> {
-    n.dbg("STEP : TRIGGER");
+pub async fn trigger<M: SendMessage + Clone + Copy>(
+    m: M,
+    bind: String,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : TRIGGER");
     let (_c, p) = proxy().await?;
-    n.msg(&format!("{}", p.trigger(bind).await?));
+    m.msg(&format!("{}", p.trigger(bind).await?));
     Ok(Step::Exit)
 }

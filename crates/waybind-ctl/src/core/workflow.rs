@@ -1,45 +1,45 @@
 use super::{Args, MinimizedArg, runner::*};
 use clap::Parser;
-use common::{ExitCode, Notifier, Outcome, STANDARD, WaybindError, error_type};
+use common::{ExitCode, Messenger, Outcome, STANDARD, SendMessage, WaybindError, error_type};
 use std::path::PathBuf;
 
-pub enum Step {
-    Init(Notifier, Args),
-    Check(Notifier, Option<PathBuf>),
+pub enum Step<M: SendMessage + Clone + Copy> {
+    Init(M, Args),
+    Check(M, Option<PathBuf>),
     Exit,
     // Health related
-    Status(Notifier),
-    List(Notifier),
-    Get(Notifier, String),
-    Reload(Notifier, Option<PathBuf>),
-    Monitor(Notifier),
+    Status(M),
+    List(M),
+    Get(M, String),
+    Reload(M, Option<PathBuf>),
+    Monitor(M),
     // Bind related
-    Add(Notifier, MinimizedArg),
-    Mod(Notifier, MinimizedArg),
-    Del(Notifier, String),
-    Trigger(Notifier, String),
+    Add(M, MinimizedArg),
+    Mod(M, MinimizedArg),
+    Del(M, String),
+    Trigger(M, String),
 }
 
 pub struct Automaton {
-    n: Notifier,
-    step: Step,
+    m: Messenger,
+    step: Step<Messenger>,
 }
 
 impl Automaton {
     pub fn new() -> Self {
         let args = Args::parse();
-        let n = match (args.debug, args.quiet) {
-            (true, _) => Notifier::Debug,
-            (_, true) => Notifier::Quiet,
-            _ => Notifier::Normal,
+        let m = match (args.debug, args.quiet) {
+            (true, _) => Messenger::Debug,
+            (_, true) => Messenger::Quiet,
+            _ => Messenger::Normal,
         };
-        let step = Step::Init(n, args);
-        Automaton { n, step }
+        let step = Step::Init(m, args);
+        Automaton { m, step }
     }
 
     pub fn error(&self, err: WaybindError) -> ExitCode {
-        self.n.dbg("STEP : ERROR");
-        self.n.msg(&format!("{err}"));
+        self.m.dbg("STEP : ERROR");
+        self.m.msg(&format!("{err}"));
 
         match err {
             WaybindError::BinaryNotFound | WaybindError::Io(_) => error_type::IO,
@@ -54,19 +54,19 @@ impl Automaton {
         let current = std::mem::replace(&mut self.step, Step::Exit);
         self.step = match current {
             // other
-            Step::Init(n, args) => init(n, args)?,
-            Step::Check(n, config) => check(n, config)?,
+            Step::Init(m, args) => init(m, args)?,
+            Step::Check(m, config) => check(m, config)?,
             // health
-            Step::Status(n) => status(n).await?,
-            Step::List(n) => list(n).await?,
-            Step::Get(n, bind) => get(n, bind).await?,
-            Step::Reload(n, config) => reload(n, config).await?,
-            Step::Monitor(n) => monitor(n).await?,
+            Step::Status(m) => status(m).await?,
+            Step::List(m) => list(m).await?,
+            Step::Get(m, bind) => get(m, bind).await?,
+            Step::Reload(m, config) => reload(m, config).await?,
+            Step::Monitor(m) => monitor(m).await?,
             // bind
-            Step::Add(n, args) => add(n, args).await?,
-            Step::Mod(n, args) => modify(n, args).await?,
-            Step::Del(n, bind) => del(n, bind).await?,
-            Step::Trigger(n, bind) => trigger(n, bind).await?,
+            Step::Add(m, args) => add(m, args).await?,
+            Step::Mod(m, args) => modify(m, args).await?,
+            Step::Del(m, bind) => del(m, bind).await?,
+            Step::Trigger(m, bind) => trigger(m, bind).await?,
             // end
             Step::Exit => return Ok(Outcome::Exit(STANDARD)),
         };

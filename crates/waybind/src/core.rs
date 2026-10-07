@@ -1,10 +1,10 @@
 mod args;
-mod feedback;
+mod runner;
 mod workflow;
 
 // Internal API
-use feedback::Feedback;
 use args::Args;
+use runner::{connection, init};
 use workflow::Step;
 
 // External API

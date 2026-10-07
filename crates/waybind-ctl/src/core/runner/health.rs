@@ -1,7 +1,7 @@
-use std::{path::PathBuf, process::ExitStatus};
+use std::path::PathBuf;
 
 use super::{Step, check};
-use common::{HealthClientProxy, Notifier, WaybindError};
+use common::{HealthClientProxy, SendMessage, WaybindError};
 
 async fn proxy() -> Result<(zbus::Connection, HealthClientProxy<'static>), WaybindError> {
     let c = zbus::Connection::session().await?;
@@ -10,47 +10,55 @@ async fn proxy() -> Result<(zbus::Connection, HealthClientProxy<'static>), Waybi
     Ok((c, proxy))
 }
 
-pub async fn status(n: Notifier) -> Result<Step, WaybindError> {
-    n.dbg("STEP : STATUS");
+pub async fn status<M: SendMessage + Clone + Copy>(m: M) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : STATUS");
     let (_c, proxy) = proxy().await?;
-    n.msg(&format!("{}", proxy.status().await?));
+    m.msg(&format!("{}", proxy.status().await?));
 
     Ok(Step::Exit)
 }
 
-pub async fn list(n: Notifier) -> Result<Step, WaybindError> {
-    n.dbg("STEP : LIST");
+pub async fn list<M: SendMessage + Clone + Copy>(m: M) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : LIST");
     let (_c, proxy) = proxy().await?;
-    n.msg(&format!("{}", proxy.list().await?));
+    m.msg(&format!("{}", proxy.list().await?));
 
     Ok(Step::Exit)
 }
 
-pub async fn reload(n: Notifier, config: Option<PathBuf>) -> Result<Step, WaybindError> {
-    n.dbg("STEP : RELOAD");
-    check(n, config.clone())?;
+pub async fn reload<M: SendMessage + Clone + Copy>(
+    m: M,
+    config: Option<PathBuf>,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : RELOAD");
+    check(m, config.clone())?;
 
     let (_c, p) = proxy().await?;
     p.kill().await?;
 
     match config {
         None => std::process::Command::new("waybind").output()?,
-        Some(path) => std::process::Command::new("waybind").arg("--config").arg(path).output()?,
+        Some(path) => std::process::Command::new("waybind")
+            .arg("--config")
+            .arg(path)
+            .output()?,
     };
 
     Ok(Step::Exit)
-
 }
 
-pub async fn get(n: Notifier, bind: String) -> Result<Step, WaybindError> {
-    n.dbg("STEP : GET");
+pub async fn get<M: SendMessage + Clone + Copy>(
+    m: M,
+    bind: String,
+) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : GET");
     let (_c, p) = proxy().await?;
-    n.msg(&format!("{}", p.get(bind).await?));
+    m.msg(&format!("{}", p.get(bind).await?));
     Ok(Step::Exit)
 }
 
-pub async fn monitor(n: Notifier) -> Result<Step, WaybindError> {
-    n.dbg("STEP : MONITOR");
-    n.msg("This function isn't built yet.");
+pub async fn monitor<M: SendMessage + Clone + Copy>(m: M) -> Result<Step<M>, WaybindError> {
+    m.dbg("STEP : MONITOR");
+    m.msg("This function isn't built yet.");
     Ok(Step::Exit)
 }
