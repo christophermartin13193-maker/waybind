@@ -26,7 +26,7 @@ fn check_single<M: SendMessage + Clone + Copy>(
     m: M,
     path: PathBuf,
 ) -> Result<Step<M>, WaybindError> {
-    m.msg(&format!("{} -> {}", path.to_str().unwrap(), get(&path)?));
+    m.msg(&format!("{} :\n{}", path.to_str().unwrap(), get(&path)?));
     Ok(Step::Exit)
 }
 

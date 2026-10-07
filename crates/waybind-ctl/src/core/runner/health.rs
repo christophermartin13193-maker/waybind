@@ -31,19 +31,23 @@ pub async fn reload<M: SendMessage + Clone + Copy>(
     config: Option<PathBuf>,
 ) -> Result<Step<M>, WaybindError> {
     m.dbg("STEP : RELOAD");
-    check(m, config.clone())?;
+
+    let mut cmd = std::process::Command::new("waybind");
+
+    match &config {
+        None => { common::get_default()?;},
+        Some(path) => {
+            common::get(path)?;
+            cmd.arg("--config").arg(path);
+        },
+    }
 
     let (_c, p) = proxy().await?;
-    p.kill().await?;
+    match p.kill().await {
+        _ => (),
+    }
 
-    match config {
-        None => std::process::Command::new("waybind").output()?,
-        Some(path) => std::process::Command::new("waybind")
-            .arg("--config")
-            .arg(path)
-            .output()?,
-    };
-
+    cmd.output()?;
     Ok(Step::Exit)
 }
 

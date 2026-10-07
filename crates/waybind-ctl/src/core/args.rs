@@ -33,7 +33,7 @@ pub enum Command {
     Monitor,
 
     // Mutation de binding en mémoire
-    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "pushed"]))]
+    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "hold"]))]
     Add {
         #[arg(long)]
         bind: String,
@@ -46,7 +46,7 @@ pub enum Command {
         #[arg(long)]
         exec: String,
     },
-    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "pushed"]))]
+    #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "hold"]))]
     Mod {
         #[arg(long)]
         bind: String,
@@ -60,7 +60,6 @@ pub enum Command {
         exec: String,
     },
     Del {
-        #[arg(long)]
         bind: String,
     },
 

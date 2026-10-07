@@ -1,13 +1,13 @@
-[[shortcut]]
+[[Shortcut]]
 bind = "Ctrl+Super+A"
 exec = "sao --next"
 
-[[shortcut]]
+[[Shortcut]]
 bind = "Ctrl+Super+B"
 action = { released = 250 }
 exec = "/usr/bin/foo"
 
-[[shortcut]]
+[[Shortcut]]
 bind = "Ctrl+Super+A"
 action = { hold = 350 }
 exec = "/usr/bin/bar arg"
