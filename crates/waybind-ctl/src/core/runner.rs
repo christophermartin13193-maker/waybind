@@ -3,7 +3,7 @@ mod health;
 mod other;
 
 // Internal API
-use super::{Args, Command, MinimizedArg, Step};
+use super::{Args, Command, MinimizedAdd, MinimizedMod, Step};
 
 // External API
 pub use bind::{add, del, modify, trigger};

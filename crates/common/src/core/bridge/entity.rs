@@ -1,7 +1,13 @@
+use super::{Action, Feedback, Shortcut};
 use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, path::PathBuf};
+
+pub type ID = u64;
 
 pub struct Context {
-    pub placeholder: u64,
+    pub f: Feedback,
+    pub map: HashMap<ID, Shortcut>,
+    pub config: PathBuf,
 }
 
 type SharedContext = std::sync::Arc<std::sync::Mutex<Context>>;
@@ -11,7 +17,7 @@ pub struct HealthServer {
 }
 
 pub struct BindServer {
-    pub context: SharedContext,
+    pub context: SharedContext
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, zbus::zvariant::Type)]
@@ -27,6 +33,16 @@ impl std::fmt::Display for SharedAction {
             Self::Pressed(_) => writeln!(f, "Pressed"),
             Self::Hold(ms) => writeln!(f, "Hold during {ms} ms"),
             Self::Released(ms) => writeln!(f, "Released after {ms} ms"),
+        }
+    }
+}
+
+impl From<SharedAction> for Action {
+    fn from(a: SharedAction) -> Self {
+        match a {
+            SharedAction::Pressed(_) => Self::Pressed,
+            SharedAction::Hold(ms) => Self::Hold(ms),
+            SharedAction::Released(ms) => Self::Released(ms),
         }
     }
 }

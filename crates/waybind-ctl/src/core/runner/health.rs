@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use super::{Step, check};
-use common::{HealthClientProxy, SendMessage, WaybindError};
+use super::Step;
+use common::{HealthClientProxy, ID, SendMessage, WaybindError};
 
 async fn proxy() -> Result<(zbus::Connection, HealthClientProxy<'static>), WaybindError> {
     let c = zbus::Connection::session().await?;
@@ -35,11 +35,13 @@ pub async fn reload<M: SendMessage + Clone + Copy>(
     let mut cmd = std::process::Command::new("waybind");
 
     match &config {
-        None => { common::get_default()?;},
+        None => {
+            common::get_default()?;
+        }
         Some(path) => {
             common::get(path)?;
             cmd.arg("--config").arg(path);
-        },
+        }
     }
 
     let (_c, p) = proxy().await?;
@@ -51,13 +53,10 @@ pub async fn reload<M: SendMessage + Clone + Copy>(
     Ok(Step::Exit)
 }
 
-pub async fn get<M: SendMessage + Clone + Copy>(
-    m: M,
-    bind: String,
-) -> Result<Step<M>, WaybindError> {
+pub async fn get<M: SendMessage + Clone + Copy>(m: M, id: ID) -> Result<Step<M>, WaybindError> {
     m.dbg("STEP : GET");
     let (_c, p) = proxy().await?;
-    m.msg(&format!("{}", p.get(bind).await?));
+    m.msg(&format!("{}", p.get(id).await?));
     Ok(Step::Exit)
 }
 

@@ -5,7 +5,7 @@ mod feedback;
 
 // External API
 pub use bridge::{
-    BindClientProxy, BindServer, Context, HealthClientProxy, HealthServer, SharedAction,
+    BindClientProxy, BindServer, Context, HealthClientProxy, HealthServer, ID, SharedAction,
 };
 pub use config::*;
 pub use control::*;

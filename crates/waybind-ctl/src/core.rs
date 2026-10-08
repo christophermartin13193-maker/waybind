@@ -3,7 +3,7 @@ mod runner;
 mod workflow;
 
 // Internal API
-use args::{Args, Command, MinimizedArg};
+use args::{Args, Command, MinimizedAdd, MinimizedMod};
 use workflow::Step;
 
 // External

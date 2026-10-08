@@ -11,14 +11,14 @@ pub fn init<M: SendMessage + Clone + Copy>(m: M, args: Args) -> Result<Step<M>, 
         // Health related
         Command::Status => Ok(Step::Status(m)),
         Command::List => Ok(Step::List(m)),
-        Command::Get { bind } => Ok(Step::Get(m, bind)),
+        Command::Get { id } => Ok(Step::Get(m, id)),
         Command::Reload { config } => Ok(Step::Reload(m, config)),
         Command::Monitor => Ok(Step::Monitor(m)),
         // Bind related
-        Command::Add { .. } => Ok(Step::Add(m, args.minimize())),
-        Command::Mod { .. } => Ok(Step::Mod(m, args.minimize())),
-        Command::Del { bind } => Ok(Step::Del(m, bind)),
-        Command::Trigger { bind } => Ok(Step::Trigger(m, bind)),
+        Command::Add { .. } => Ok(Step::Add(m, args.mini_add())),
+        Command::Mod { .. } => Ok(Step::Mod(m, args.mini_mod())),
+        Command::Del { id } => Ok(Step::Del(m, id)),
+        Command::Trigger { id } => Ok(Step::Trigger(m, id)),
     }
 }
 

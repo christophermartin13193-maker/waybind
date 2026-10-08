@@ -1,5 +1,5 @@
 use clap::{ArgGroup, Parser, Subcommand};
-use common::SharedAction;
+use common::{ID, SharedAction};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -49,7 +49,7 @@ pub enum Command {
     #[command(group=ArgGroup::new("action_type").required(true).args(["pressed", "released", "hold"]))]
     Mod {
         #[arg(long)]
-        bind: String,
+        id: ID,
         #[arg(long)]
         pressed: bool,
         #[arg(long)]
@@ -60,27 +60,66 @@ pub enum Command {
         exec: String,
     },
     Del {
-        bind: String,
+        id: ID,
     },
 
     // Consultation/Test
     List,
     Get {
-        bind: String,
+        id: ID,
     },
     Trigger {
-        bind: String,
+        id: ID,
     },
 }
 
-pub struct MinimizedArg {
+pub struct MinimizedAdd {
     pub bind: String,
     pub exec: String,
     pub action: SharedAction,
 }
 
+pub struct MinimizedMod {
+    pub id: ID,
+    pub exec: String,
+    pub action: SharedAction,
+}
+
 impl Args {
-    pub fn minimize(self) -> MinimizedArg {
+    pub fn mini_mod(self) -> MinimizedMod {
+        match self.command {
+            Command::Mod {
+                id,
+                released,
+                hold,
+                exec,
+                ..
+            } => match (hold, released) {
+                (Some(ms), _) => MinimizedMod {
+                    id,
+                    exec,
+                    action: SharedAction::Hold(ms),
+                },
+                (_, Some(ms)) => MinimizedMod {
+                    id,
+                    exec,
+                    action: SharedAction::Released(ms),
+                },
+                _ => MinimizedMod {
+                    id,
+                    exec,
+                    action: SharedAction::Released(0),
+                },
+            },
+            _ => panic!(
+                "Args can only be transformed in MinimizedMod when the argument 'mod' is involved"
+            ),
+        }
+    }
+}
+
+impl Args {
+    pub fn mini_add(self) -> MinimizedAdd {
         match self.command {
             Command::Add {
                 bind,
@@ -88,31 +127,26 @@ impl Args {
                 hold,
                 exec,
                 ..
-            }
-            | Command::Mod {
-                bind,
-                released,
-                hold,
-                exec,
-                ..
             } => match (released, hold) {
-                (Some(ms), _) => MinimizedArg {
+                (Some(ms), _) => MinimizedAdd {
                     bind,
                     exec,
                     action: SharedAction::Hold(ms),
                 },
-                (_, Some(ms)) => MinimizedArg {
+                (_, Some(ms)) => MinimizedAdd {
                     bind,
                     exec,
                     action: SharedAction::Released(ms),
                 },
-                _ => MinimizedArg {
+                _ => MinimizedAdd {
                     bind,
                     exec,
                     action: SharedAction::Pressed(0),
                 },
             },
-            _ => panic!("You asked for the minimization of an invalid Args"),
+            _ => panic!(
+                "Args can only be transformed in MinimizedAdd when the argument 'add' is involved"
+            ),
         }
     }
 }

@@ -1,3 +1,5 @@
+use crate::ID;
+
 pub enum WaybindError {
     Toml(toml::de::Error),
     Io(std::io::Error),
@@ -5,6 +7,7 @@ pub enum WaybindError {
     Bridge(zbus::fdo::Error),
     Name(zbus::names::Error),
     LockPoisoned(String),
+    UnknownID(ID),
     BinaryNotFound,
     NoDefaultFiles,
 }
@@ -38,6 +41,7 @@ impl std::fmt::Display for WaybindError {
             Self::LockPoisoned(error) => writeln!(f, "{error}"),
             Self::NoDefaultFiles => writeln!(f, "No viable default file."),
             Self::BinaryNotFound => writeln!(f, "Waybind binary wasn't found"),
+            Self::UnknownID(id) => writeln!(f, "ID {id} wasn't found amongst the shortcut"),
         }
     }
 }

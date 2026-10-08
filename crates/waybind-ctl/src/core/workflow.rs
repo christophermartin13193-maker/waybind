@@ -1,6 +1,6 @@
-use super::{Args, MinimizedArg, runner::*};
+use super::{Args, MinimizedAdd, MinimizedMod, runner::*};
 use clap::Parser;
-use common::{ExitCode, Messenger, Outcome, STANDARD, SendMessage, WaybindError, error_type};
+use common::{ExitCode, ID, Messenger, Outcome, STANDARD, SendMessage, WaybindError, error_type};
 use std::path::PathBuf;
 
 pub enum Step<M: SendMessage + Clone + Copy> {
@@ -10,14 +10,14 @@ pub enum Step<M: SendMessage + Clone + Copy> {
     // Health related
     Status(M),
     List(M),
-    Get(M, String),
+    Get(M, ID),
     Reload(M, Option<PathBuf>),
     Monitor(M),
     // Bind related
-    Add(M, MinimizedArg),
-    Mod(M, MinimizedArg),
-    Del(M, String),
-    Trigger(M, String),
+    Add(M, MinimizedAdd),
+    Mod(M, MinimizedMod),
+    Del(M, ID),
+    Trigger(M, ID),
 }
 
 pub struct Automaton {

@@ -1,18 +1,17 @@
 use super::{Args, connection, init};
 use clap::Parser;
 use common::{
-    ExitCode, Feedback, MessengerLevel, NotifierLevel, Outcome, STANDARD, SendMessage,
-    SendNotification, WaybindError, error_type,
+    Context, ExitCode, Feedback, MessengerLevel, NotifierLevel, Outcome, STANDARD, SendMessage, SendNotification, WaybindError, error_type,
 };
 
-pub enum Step<F: SendMessage + SendNotification + Clone + Copy> {
-    Init(F, Args),
-    Connection(F),
+pub enum Step {
+    Init(Feedback, Args),
+    Connection(Feedback, Context),
     Exit,
 }
 
 pub struct Automaton {
-    step: Step<Feedback>,
+    step: Step,
     f: Feedback,
 }
 
@@ -44,7 +43,7 @@ impl Automaton {
 
         self.step = match current {
             Step::Init(f, args) => init(f, args)?,
-            Step::Connection(f) => connection(f).await?,
+            Step::Connection(f, context) => connection(f, context).await?,
             Step::Exit => return Ok(Outcome::Exit(STANDARD)),
         };
 
