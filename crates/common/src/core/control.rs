@@ -41,7 +41,7 @@ impl std::fmt::Display for WaybindError {
             Self::LockPoisoned(error) => writeln!(f, "{error}"),
             Self::NoDefaultFiles => writeln!(f, "No viable default file."),
             Self::BinaryNotFound => writeln!(f, "Waybind binary wasn't found"),
-            Self::UnknownID(id) => writeln!(f, "ID {id} wasn't found amongst the shortcut"),
+            Self::UnknownID(id) => writeln!(f, "ID {id} wasn't found amongst the shortcuts"),
         }
     }
 }

@@ -1,7 +1,8 @@
 use super::{Args, connection, init};
 use clap::Parser;
 use common::{
-    Context, ExitCode, Feedback, MessengerLevel, NotifierLevel, Outcome, STANDARD, SendMessage, SendNotification, WaybindError, error_type,
+    Context, ExitCode, Feedback, MessengerLevel, NotifierLevel, Outcome, STANDARD, SendMessage,
+    SendNotification, WaybindError, error_type,
 };
 
 pub enum Step {

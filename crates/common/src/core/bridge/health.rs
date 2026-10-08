@@ -1,4 +1,4 @@
-use crate::{Feedback, SendMessage, SendNotification};
+use crate::{SendMessage, SendNotification};
 
 use super::{ID, STANDARD, WaybindError, entity::HealthServer};
 use zbus::{interface, proxy};
@@ -42,7 +42,7 @@ impl HealthServer {
 
         let mut answer = String::new();
         for (id, shortcut) in context.map.iter() {
-            answer.push_str(&format!("{id} : {shortcut}\n"));
+            answer.push_str(&format!("{id} : {shortcut}"));
         }
         Ok(answer)
     }

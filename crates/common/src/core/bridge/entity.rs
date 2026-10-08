@@ -7,6 +7,8 @@ pub type ID = u64;
 pub struct Context {
     pub f: Feedback,
     pub map: HashMap<ID, Shortcut>,
+    pub size: usize,
+    pub stack: Vec<ID>,
     pub config: PathBuf,
 }
 
@@ -17,7 +19,7 @@ pub struct HealthServer {
 }
 
 pub struct BindServer {
-    pub context: SharedContext
+    pub context: SharedContext,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, zbus::zvariant::Type)]
