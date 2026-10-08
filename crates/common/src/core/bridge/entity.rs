@@ -7,7 +7,6 @@ pub type ID = u64;
 pub struct Context {
     pub f: Feedback,
     pub map: HashMap<ID, Shortcut>,
-    pub size: usize,
     pub stack: Vec<ID>,
     pub config: PathBuf,
 }
@@ -39,12 +38,12 @@ impl std::fmt::Display for SharedAction {
     }
 }
 
-impl From<SharedAction> for Action {
-    fn from(a: SharedAction) -> Self {
-        match a {
-            SharedAction::Pressed(_) => Self::Pressed,
-            SharedAction::Hold(ms) => Self::Hold(ms),
-            SharedAction::Released(ms) => Self::Released(ms),
+impl SharedAction {
+    pub fn action(self) -> Action {
+        match self {
+            Self::Hold(ms) => Action::Hold(ms),
+            Self::Released(ms) => Action::Released(ms),
+            Self::Pressed(_) => Action::Pressed,
         }
     }
 }

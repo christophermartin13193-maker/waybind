@@ -40,7 +40,6 @@ pub fn init(f: Feedback, args: Args) -> Result<Step, WaybindError> {
             map.insert(id as ID, shortcut);
         }
     }
-    let size = map.len();
 
     // TODO get the key_map
     // bind shortcuts
@@ -52,7 +51,6 @@ pub fn init(f: Feedback, args: Args) -> Result<Step, WaybindError> {
         Context {
             f,
             map,
-            size,
             stack: Vec::new(),
             config: path,
         },
